@@ -35,13 +35,21 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	//5.注册控制器
+	//5.注册控制器product
 	productRepository := repositories.NewProductManager("product", db)
 	productService := services.NewProductService(productRepository)
 	productParty := app.Party("/product")
 	product := mvc.New(productParty)
 	product.Register(ctx, productService)
 	product.Handle(new(controllers.ProductController))
+
+	// 注册控制器order
+	orderRepository := repositories.NewOrderManager("order", db)
+	orderService := services.NewOrderService(orderRepository)
+	orderParty := app.Party("/order")
+	order := mvc.New(orderParty)
+	order.Register(ctx, orderService)
+	order.Handle(new(controllers.OrderController))
 
 	//6.启动服务
 	app.Run(
