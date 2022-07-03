@@ -64,7 +64,7 @@ func (p *ProductController) PostAdd() {
 	p.Ctx.Redirect("/product/all")
 }
 
-// 展示一个产品
+// GetManager 展示一个产品
 func (p *ProductController) GetManager() mvc.View {
 	// url中获取参数
 	idString := p.Ctx.URLParam("id")
