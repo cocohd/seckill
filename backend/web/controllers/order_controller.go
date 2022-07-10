@@ -21,7 +21,7 @@ func (o *OrderController) Get() mvc.View {
 	}
 
 	return mvc.View{
-		Name: "order/view.html",
+		Name: "order/views.html",
 		Data: iris.Map{
 			"order": orderArray,
 		},
@@ -46,7 +46,7 @@ func (o *OrderController) GetDelete() {
 		o.Ctx.Application().Logger().Debug("删除商品失败，id：" + idString)
 	}
 
-	o.Ctx.Redirect("/order/view.html")
+	o.Ctx.Redirect("/order/views.html")
 }
 
 func (o *OrderController) PostUpdate() {
@@ -63,5 +63,5 @@ func (o *OrderController) PostUpdate() {
 		o.Ctx.Application().Logger().Debug(err)
 	}
 
-	o.Ctx.Redirect("/order/view.html")
+	o.Ctx.Redirect("/order/views.html")
 }

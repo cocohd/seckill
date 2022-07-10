@@ -93,9 +93,9 @@ function massageOverrides(input) {
 				// iterate through the properties of this possible View-Option-Hash value
 				$.each(val, function(subName, subVal) {
 
-					// is the property targeting a view?
+					// is the property targeting a views?
 					if (/^(month|week|day|default|basic(Week|Day)?|agenda(Week|Day)?)$/.test(subName)) {
-						if (!overrides.views[subName]) { // ensure the view-target entry exists
+						if (!overrides.views[subName]) { // ensure the views-target entry exists
 							overrides.views[subName] = {};
 						}
 						overrides.views[subName][name] = subVal; // record the value in the `views` object
@@ -2166,7 +2166,7 @@ var Popover = Class.extend(ListenerMixin, {
 		viewportTop += windowEl.scrollTop();
 		viewportLeft += windowEl.scrollLeft();
 
-		// constrain to the view port. if constrained by two edges, give precedence to top/left
+		// constrain to the views port. if constrained by two edges, give precedence to top/left
 		if (options.viewportConstrain !== false) {
 			top = Math.min(top, viewportTop + viewportEl.outerHeight() - height - this.margin);
 			top = Math.max(top, viewportTop + this.margin);
@@ -3397,7 +3397,7 @@ var MouseFollower = Class.extend(ListenerMixin, {
 var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 
 	view: null, // a View object
-	isRTL: null, // shortcut to the view's isRTL option
+	isRTL: null, // shortcut to the views's isRTL option
 
 	start: null,
 	end: null,
@@ -3604,7 +3604,7 @@ var Grid = FC.Grid = Class.extend(ListenerMixin, MouseIgnorerMixin, {
 	},
 
 
-	// Renders the basic structure of grid view before any content is rendered
+	// Renders the basic structure of grid views before any content is rendered
 	renderSkeleton: function() {
 		// subclasses should implement
 	},
@@ -4346,8 +4346,8 @@ Grid.mixin({
 			return this.segDragListener;
 		}
 
-		// Tracks mouse movement over the *view's* coordinate map. Allows dragging and dropping between subcomponents
-		// of the view.
+		// Tracks mouse movement over the *views's* coordinate map. Allows dragging and dropping between subcomponents
+		// of the views.
 		var dragListener = this.segDragListener = new HitDragListener(view, {
 			scroll: view.opt('dragScroll'),
 			subjectEl: el,
@@ -4359,7 +4359,7 @@ Grid.mixin({
 					parentEl: view.el,
 					opacity: dragListener.isTouch ? null : view.opt('dragOpacity'),
 					revertDuration: view.opt('dragRevertDuration'),
-					zIndex: 2 // one above the .fc-view
+					zIndex: 2 // one above the .fc-views
 				});
 				mouseFollower.hide(); // don't show until we know this is a real drag
 				mouseFollower.start(ev);
@@ -4382,7 +4382,7 @@ Grid.mixin({
 					origHit = seg.hit;
 				}
 
-				// since we are querying the parent view, might not belong to this grid
+				// since we are querying the parent views, might not belong to this grid
 				dropLocation = _this.computeEventDrop(
 					origHit.component.getHitSpan(origHit),
 					hit.component.getHitSpan(hit),
@@ -4586,7 +4586,7 @@ Grid.mixin({
 			},
 			hitOver: function(hit) {
 				dropLocation = _this.computeExternalDrop(
-					hit.component.getHitSpan(hit), // since we are querying the parent view, might not belong to this grid
+					hit.component.getHitSpan(hit), // since we are querying the parent views, might not belong to this grid
 					meta
 				);
 
@@ -5597,7 +5597,7 @@ var DayTableMixin = FC.DayTableMixin = {
 
 var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 
-	numbersVisible: false, // should render a row for day/week numbers? set by outside view. TODO: make internal
+	numbersVisible: false, // should render a row for day/week numbers? set by outside views. TODO: make internal
 	bottomCoordPadding: 0, // hack for extending the hit area for the last row of the coordinate grid
 
 	rowEls: null, // set of fake row elements
@@ -5610,7 +5610,7 @@ var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 
 	// Renders the rows and columns into the component's `this.el`, which should already be assigned.
 	// isRigid determins whether the individual rows should ignore the contents and be a constant height.
-	// Relies on the view's colCnt and rowCnt. In the future, this component should probably be self-sufficient.
+	// Relies on the views's colCnt and rowCnt. In the future, this component should probably be self-sufficient.
 	renderDates: function(isRigid) {
 		var view = this.view;
 		var rowCnt = this.rowCnt;
@@ -6553,7 +6553,7 @@ DayGrid.mixin({
 				if (clickOption === 'popover') {
 					_this.showSegPopover(row, col, moreEl, reslicedAllSegs);
 				}
-				else if (typeof clickOption === 'string') { // a view name
+				else if (typeof clickOption === 'string') { // a views name
 					view.calendar.zoomTo(date, clickOption);
 				}
 			});
@@ -6740,7 +6740,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 
 
 	// Renders the time grid into `this.el`, which should already be assigned.
-	// Relies on the view's colCnt. In the future, this component should probably be self-sufficient.
+	// Relies on the views's colCnt. In the future, this component should probably be self-sufficient.
 	renderDates: function() {
 		this.el.html(this.renderHtml());
 		this.colEls = this.el.find('.fc-day');
@@ -6782,7 +6782,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 		var isRTL = this.isRTL;
 		var html = '';
 		var slotTime = moment.duration(+this.minTime); // wish there was .clone() for durations
-		var slotDate; // will be on the view's first day, but we only care about its time
+		var slotDate; // will be on the views's first day, but we only care about its time
 		var isLabeled;
 		var axisHtml;
 
@@ -7170,7 +7170,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 		}
 
 		// render an arrow over the axis
-		if (segs.length > 0) { // is the current time in view?
+		if (segs.length > 0) { // is the current time in views?
 			nodes.push($('<div class="fc-now-indicator fc-now-indicator-arrow"></div>')
 				.css('top', top)
 				.appendTo(this.el.find('.fc-content-skeleton'))[0]);
@@ -7229,7 +7229,7 @@ var TimeGrid = FC.TimeGrid = Grid.extend(DayTableMixin, {
 
 ;;
 
-/* Methods for rendering SEGMENTS, pieces of content that live on the view
+/* Methods for rendering SEGMENTS, pieces of content that live on the views
  ( this file is no longer just for events )
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -7252,7 +7252,7 @@ TimeGrid.mixin({
 	businessSegs: null,
 
 
-	// Renders the DOM that the view's content will live in
+	// Renders the DOM that the views's content will live in
 	renderContentSkeleton: function() {
 		var cellHtml = '';
 		var i;
@@ -7848,24 +7848,24 @@ function isSlotSegCollision(seg1, seg2) {
 
 var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
-	type: null, // subclass' view name (string)
+	type: null, // subclass' views name (string)
 	name: null, // deprecated. use `type` instead
 	title: null, // the text that will be displayed in the header's title
 
 	calendar: null, // owner Calendar object
-	options: null, // hash containing all options. already merged with view-specific-options
-	el: null, // the view's containing element. set by Calendar
+	options: null, // hash containing all options. already merged with views-specific-options
+	el: null, // the views's containing element. set by Calendar
 
 	displaying: null, // a promise representing the state of rendering. null if no render requested
 	isSkeletonRendered: false,
 	isEventsRendered: false,
 
-	// range the view is actually displaying (moments)
+	// range the views is actually displaying (moments)
 	start: null,
 	end: null, // exclusive
 
-	// range the view is formally responsible for (moments)
-	// may be different from start/end. for example, a month view might have 1st-31st, excluding padded dates
+	// range the views is formally responsible for (moments)
+	// may be different from start/end. for example, a month views might have 1st-31st, excluding padded dates
 	intervalStart: null,
 	intervalEnd: null, // exclusive
 	intervalDuration: null,
@@ -7924,7 +7924,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Triggers handlers that are view-related. Modifies args before passing to calendar.
+	// Triggers handlers that are views-related. Modifies args before passing to calendar.
 	trigger: function(name, thisObj) { // arguments beyond thisObj are passed along
 		var calendar = this.calendar;
 
@@ -7932,7 +7932,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 			calendar,
 			[name, thisObj || this].concat(
 				Array.prototype.slice.call(arguments, 2), // arguments beyond thisObj
-				[ this ] // always make the last argument a reference to the view. TODO: deprecate
+				[ this ] // always make the last argument a reference to the views. TODO: deprecate
 			)
 		);
 	},
@@ -8012,7 +8012,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	// visible. `direction` is optional and indicates which direction the current date was being
 	// incremented or decremented (1 or -1).
 	massageCurrentDate: function(date, direction) {
-		if (this.intervalDuration.as('days') <= 1) { // if the view displays a single day or smaller
+		if (this.intervalDuration.as('days') <= 1) { // if the views displays a single day or smaller
 			if (this.isHiddenDay(date)) {
 				date = this.skipHiddenDays(date, direction);
 				date.startOf('day');
@@ -8027,13 +8027,13 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Sets the view's title property to the most updated computed value
+	// Sets the views's title property to the most updated computed value
 	updateTitle: function() {
 		this.title = this.computeTitle();
 	},
 
 
-	// Computes what the title at the top of the calendar should be for this view
+	// Computes what the title at the top of the calendar should be for this views
 	computeTitle: function() {
 		return this.formatRange(
 			{
@@ -8083,7 +8083,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Sets the container element that the view should render inside of.
+	// Sets the container element that the views should render inside of.
 	// Does other DOM-related initializations.
 	setElement: function(el) {
 		this.el = el;
@@ -8091,7 +8091,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Removes the view's container element from the DOM, clearing any content beforehand.
+	// Removes the views's container element from the DOM, clearing any content beforehand.
 	// Undoes any other DOM-related attachments.
 	removeElement: function() {
 		this.clear(); // clears all content
@@ -8112,7 +8112,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Does everything necessary to display the view centered around the given unzoned date.
+	// Does everything necessary to display the views centered around the given unzoned date.
 	// Does every type of rendering EXCEPT rendering events.
 	// Is asychronous and returns a promise.
 	display: function(date, explicitScrollState) {
@@ -8148,7 +8148,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Does everything necessary to clear the content of the view.
+	// Does everything necessary to clear the content of the views.
 	// Clears dates and events. Does not clear the skeleton.
 	// Is asychronous and returns a promise.
 	clear: function() {
@@ -8168,8 +8168,8 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Displays the view's non-event content, such as date-related content or anything required by events.
-	// Renders the view's non-content skeleton if necessary.
+	// Displays the views's non-event content, such as date-related content or anything required by events.
+	// Renders the views's non-content skeleton if necessary.
 	// Can be asynchronous and return a promise.
 	displayView: function(date) {
 		if (!this.isSkeletonRendered) {
@@ -8189,7 +8189,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Unrenders the view content that was rendered in displayView.
+	// Unrenders the views content that was rendered in displayView.
 	// Can be asynchronous and return a promise.
 	clearView: function() {
 		this.unselect();
@@ -8203,51 +8203,51 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Renders the basic structure of the view before any content is rendered
+	// Renders the basic structure of the views before any content is rendered
 	renderSkeleton: function() {
 		// subclasses should implement
 	},
 
 
-	// Unrenders the basic structure of the view
+	// Unrenders the basic structure of the views
 	unrenderSkeleton: function() {
 		// subclasses should implement
 	},
 
 
-	// Renders the view's date-related content.
+	// Renders the views's date-related content.
 	// Assumes setRange has already been called and the skeleton has already been rendered.
 	renderDates: function() {
 		// subclasses should implement
 	},
 
 
-	// Unrenders the view's date-related content
+	// Unrenders the views's date-related content
 	unrenderDates: function() {
 		// subclasses should override
 	},
 
 
-	// Signals that the view's content has been rendered
+	// Signals that the views's content has been rendered
 	triggerRender: function() {
 		this.trigger('viewRender', this, this, this.el);
 	},
 
 
-	// Signals that the view's content is about to be unrendered
+	// Signals that the views's content is about to be unrendered
 	triggerUnrender: function() {
 		this.trigger('viewDestroy', this, this, this.el);
 	},
 
 
-	// Binds DOM handlers to elements that reside outside the view container, such as the document
+	// Binds DOM handlers to elements that reside outside the views container, such as the document
 	bindGlobalHandlers: function() {
 		this.listenTo($(document), 'mousedown', this.handleDocumentMousedown);
 		this.listenTo($(document), 'touchstart', this.processUnselect);
 	},
 
 
-	// Unbinds DOM handlers from elements that reside outside the view container
+	// Unbinds DOM handlers from elements that reside outside the views container
 	unbindGlobalHandlers: function() {
 		this.stopListeningTo($(document));
 	},
@@ -8267,7 +8267,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Renders business-hours onto the view. Assumes updateSize has already been called.
+	// Renders business-hours onto the views. Assumes updateSize has already been called.
 	renderBusinessHours: function() {
 		// subclasses should implement
 	},
@@ -8328,7 +8328,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Immediately unrenders the view's current time indicator and stops any re-rendering timers.
+	// Immediately unrenders the views's current time indicator and stops any re-rendering timers.
 	// Won't cause side effects if indicator isn't rendered.
 	stopNowIndicator: function() {
 		if (this.isNowIndicatorRendered) {
@@ -8407,7 +8407,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 
 	// Updates the vertical dimensions of the calendar to the specified height.
-	// if `isAuto` is set to true, height becomes merely a suggestion and the view should use its "natural" height.
+	// if `isAuto` is set to true, height becomes merely a suggestion and the views should use its "natural" height.
 	setHeight: function(height, isAuto) {
 		// subclasses should implement
 	},
@@ -8424,13 +8424,13 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Retrieves the view's current natural scroll state. Can return an arbitrary format.
+	// Retrieves the views's current natural scroll state. Can return an arbitrary format.
 	queryScroll: function() {
 		// subclasses must implement
 	},
 
 
-	// Sets the view's scroll state. Will accept the same format computeInitialScroll and queryScroll produce.
+	// Sets the views's scroll state. Will accept the same format computeInitialScroll and queryScroll produce.
 	setScroll: function(scrollState) {
 		// subclasses must implement
 	},
@@ -8451,7 +8451,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Does everything necessary to display the given events onto the current view
+	// Does everything necessary to display the given events onto the current views
 	displayEvents: function(events) {
 		var scrollState = this.queryScroll();
 
@@ -8463,7 +8463,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Does everything necessary to clear the view's currently-rendered events
+	// Does everything necessary to clear the views's currently-rendered events
 	clearEvents: function() {
 		var scrollState;
 
@@ -8483,13 +8483,13 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Renders the events onto the view.
+	// Renders the events onto the views.
 	renderEvents: function(events) {
 		// subclasses should implement
 	},
 
 
-	// Removes event elements from the view.
+	// Removes event elements from the views.
 	unrenderEvents: function() {
 		// subclasses should implement
 	},
@@ -8546,7 +8546,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 	// Iterates through event segments that have been rendered (have an el). Goes through all by default.
 	// If the optional `event` argument is specified, only iterates through segments linked to that event.
-	// The `this` value of the callback function will be the view.
+	// The `this` value of the callback function will be the views.
 	renderedEventSegEach: function(func, event) {
 		var segs = this.getEventSegs();
 		var i;
@@ -8561,7 +8561,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Retrieves all the rendered segment objects for the view
+	// Retrieves all the rendered segment objects for the views
 	getEventSegs: function() {
 		// subclasses must implement
 		return [];
@@ -8587,7 +8587,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Must be called when an event in the view is dropped onto new location.
+	// Must be called when an event in the views is dropped onto new location.
 	// `dropLocation` is an object that contains the new zoned start/end/allDay values for the event.
 	reportEventDrop: function(event, dropLocation, largeUnit, el, ev) {
 		var calendar = this.calendar;
@@ -8691,7 +8691,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	},
 
 
-	// Must be called when an event in the view has been resized to a new length
+	// Must be called when an event in the views has been resized to a new length
 	reportEventResize: function(event, resizeLocation, largeUnit, el, ev) {
 		var calendar = this.calendar;
 		var mutateResult = calendar.mutateEvent(event, resizeLocation, largeUnit);
@@ -8715,7 +8715,7 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Selects a date span on the view. `start` and `end` are both Moments.
+	// Selects a date span on the views. `start` and `end` are both Moments.
 	// `ev` is the native mouse event that begin the interaction.
 	select: function(span, ev) {
 		this.unselect(ev);
@@ -9083,9 +9083,9 @@ var Calendar = FC.Calendar = Class.extend({
 	dirDefaults: null, // option defaults related to LTR or RTL
 	langDefaults: null, // option defaults related to current locale
 	overrides: null, // option overrides given to the fullCalendar constructor
-	dynamicOverrides: null, // options set with dynamic setter method. higher precedence than view overrides.
+	dynamicOverrides: null, // options set with dynamic setter method. higher precedence than views overrides.
 	options: null, // all defaults combined with overrides
-	viewSpecCache: null, // cache of view definitions
+	viewSpecCache: null, // cache of views definitions
 	view: null, // current View object
 	header: null,
 	loadingLevel: 0, // number of simultaneous loading tasks
@@ -9138,7 +9138,7 @@ var Calendar = FC.Calendar = Class.extend({
 	},
 
 
-	// Gets information about how to create a view. Will use a cache.
+	// Gets information about how to create a views. Will use a cache.
 	getViewSpec: function(viewType) {
 		var cache = this.viewSpecCache;
 
@@ -9146,7 +9146,7 @@ var Calendar = FC.Calendar = Class.extend({
 	},
 
 
-	// Given a duration singular unit, like "week" or "day", finds a matching view spec.
+	// Given a duration singular unit, like "week" or "day", finds a matching views spec.
 	// Preference is given to views that have corresponding buttons.
 	getUnitViewSpec: function(unit) {
 		var viewTypes;
@@ -9173,19 +9173,19 @@ var Calendar = FC.Calendar = Class.extend({
 	},
 
 
-	// Builds an object with information on how to create a given view
+	// Builds an object with information on how to create a given views
 	buildViewSpec: function(requestedViewType) {
 		var viewOverrides = this.overrides.views || {};
-		var specChain = []; // for the view. lowest to highest priority
-		var defaultsChain = []; // for the view. lowest to highest priority
-		var overridesChain = []; // for the view. lowest to highest priority
+		var specChain = []; // for the views. lowest to highest priority
+		var defaultsChain = []; // for the views. lowest to highest priority
+		var overridesChain = []; // for the views. lowest to highest priority
 		var viewType = requestedViewType;
-		var spec; // for the view
-		var overrides; // for the view
+		var spec; // for the views
+		var overrides; // for the views
 		var duration;
 		var unit;
 
-		// iterate from the specific view definition to a more general one until we hit an actual View class
+		// iterate from the specific views definition to a more general one until we hit an actual View class
 		while (viewType) {
 			spec = fcViews[viewType];
 			overrides = viewOverrides[viewType];
@@ -9203,7 +9203,7 @@ var Calendar = FC.Calendar = Class.extend({
 			}
 
 			if (overrides) {
-				overridesChain.unshift(overrides); // view-specific option hashes have options at zero-level
+				overridesChain.unshift(overrides); // views-specific option hashes have options at zero-level
 				duration = duration || overrides.duration;
 				viewType = viewType || overrides.type;
 			}
@@ -9221,7 +9221,7 @@ var Calendar = FC.Calendar = Class.extend({
 				spec.duration = duration;
 				unit = computeIntervalUnit(duration);
 
-				// view is a single-unit duration, like "week" or "day"
+				// views is a single-unit duration, like "week" or "day"
 				// incorporate options for this. lowest priority
 				if (duration.as(unit) === 1) {
 					spec.singleUnit = unit;
@@ -9240,26 +9240,26 @@ var Calendar = FC.Calendar = Class.extend({
 	},
 
 
-	// Builds and assigns a view spec's options object from its already-assigned defaults and overrides
+	// Builds and assigns a views spec's options object from its already-assigned defaults and overrides
 	buildViewSpecOptions: function(spec) {
 		spec.options = mergeOptions([ // lowest to highest priority
 			Calendar.defaults, // global defaults
-			spec.defaults, // view's defaults (from ViewSubclass.defaults)
+			spec.defaults, // views's defaults (from ViewSubclass.defaults)
 			this.dirDefaults,
-			this.langDefaults, // locale and dir take precedence over view's defaults!
+			this.langDefaults, // locale and dir take precedence over views's defaults!
 			this.overrides, // calendar's overrides (options given to constructor)
-			spec.overrides, // view's overrides (view-specific options)
+			spec.overrides, // views's overrides (views-specific options)
 			this.dynamicOverrides // dynamically set via setter. highest precedence
 		]);
 		populateInstanceComputableOptions(spec.options);
 	},
 
 
-	// Computes and assigns a view spec's buttonText-related options
+	// Computes and assigns a views spec's buttonText-related options
 	buildViewSpecButtonText: function(spec, requestedViewType) {
 
 		// given an options object with a possible `buttonText` hash, lookup the buttonText for the
-		// requested view, falling back to a generic unit entry like "week" or "day"
+		// requested views, falling back to a generic unit entry like "week" or "day"
 		function queryButtonText(options) {
 			var buttonText = options.buttonText || {};
 			return buttonText[requestedViewType] ||
@@ -9270,7 +9270,7 @@ var Calendar = FC.Calendar = Class.extend({
 		spec.buttonTextOverride =
 			queryButtonText(this.dynamicOverrides) ||
 			queryButtonText(this.overrides) || // constructor-specified buttonText lookup hash takes precedence
-			spec.overrides.buttonText; // `buttonText` for view-specific options is a string
+			spec.overrides.buttonText; // `buttonText` for views-specific options is a string
 
 		// highest to lowest priority. mirrors buildViewSpecOptions
 		spec.buttonTextDefault =
@@ -9279,11 +9279,11 @@ var Calendar = FC.Calendar = Class.extend({
 			spec.defaults.buttonText || // a single string. from ViewSubclass.defaults
 			queryButtonText(Calendar.defaults) ||
 			(spec.duration ? this.humanizeDuration(spec.duration) : null) || // like "3 days"
-			requestedViewType; // fall back to given view name
+			requestedViewType; // fall back to given views name
 	},
 
 
-	// Given a view name for a custom view or a standard view, creates a ready-to-go View object
+	// Given a views name for a custom views or a standard views, creates a ready-to-go View object
 	instantiateView: function(viewType) {
 		var spec = this.getViewSpec(viewType);
 
@@ -9291,7 +9291,7 @@ var Calendar = FC.Calendar = Class.extend({
 	},
 
 
-	// Returns a boolean about whether the view is okay to instantiate at some point
+	// Returns a boolean about whether the views is okay to instantiate at some point
 	isValidViewType: function(viewType) {
 		return Boolean(this.getViewSpec(viewType));
 	},
@@ -9351,7 +9351,7 @@ function Calendar_constructor(element, overrides) {
 	t.reportEvents = reportEvents;
 	t.reportEventChange = reportEventChange;
 	t.rerenderEvents = renderEvents; // `renderEvents` serves as a rerender. an API method
-	t.changeView = renderView; // `renderView` will switch to another view
+	t.changeView = renderView; // `renderView` will switch to another views
 	t.select = select;
 	t.unselect = unselect;
 	t.prev = prev;
@@ -9582,8 +9582,8 @@ function Calendar_constructor(element, overrides) {
 	var header;
 	var content;
 	var tm; // for making theme classes
-	var currentView; // NOTE: keep this in sync with this.view
-	var viewsByType = {}; // holds all instantiated view instances, current or not
+	var currentView; // NOTE: keep this in sync with this.views
+	var viewsByType = {}; // holds all instantiated views instances, current or not
 	var suggestedViewHeight;
 	var windowResizeProxy; // wraps the windowResize function
 	var ignoreWindowResize = 0;
@@ -9634,7 +9634,7 @@ function Calendar_constructor(element, overrides) {
 			element.toggleClass('fc-rtl', isRTL);
 		});
 
-		content = $("<div class='fc-view-container'/>").prependTo(element);
+		content = $("<div class='fc-views-container'/>").prependTo(element);
 
 		header = t.header = new Header(t);
 		renderHeader();
@@ -9662,8 +9662,8 @@ function Calendar_constructor(element, overrides) {
 		if (currentView) {
 			currentView.removeElement();
 
-			// NOTE: don't null-out currentView/t.view in case API methods are called after destroy.
-			// It is still the "current" view, just not rendered.
+			// NOTE: don't null-out currentView/t.views in case API methods are called after destroy.
+			// It is still the "current" views, just not rendered.
 		}
 
 		header.removeElement();
@@ -9686,36 +9686,36 @@ function Calendar_constructor(element, overrides) {
 	// -----------------------------------------------------------------------------------
 
 
-	// Renders a view because of a date change, view-type change, or for the first time.
-	// If not given a viewType, keep the current view but render different dates.
+	// Renders a views because of a date change, views-type change, or for the first time.
+	// If not given a viewType, keep the current views but render different dates.
 	// Accepts an optional scroll state to restore to.
 	function renderView(viewType, explicitScrollState) {
 		ignoreWindowResize++;
 
-		// if viewType is changing, remove the old view's rendering
+		// if viewType is changing, remove the old views's rendering
 		if (currentView && viewType && currentView.type !== viewType) {
-			freezeContentHeight(); // prevent a scroll jump when view element is removed
+			freezeContentHeight(); // prevent a scroll jump when views element is removed
 			clearView();
 		}
 
-		// if viewType changed, or the view was never created, create a fresh view
+		// if viewType changed, or the views was never created, create a fresh views
 		if (!currentView && viewType) {
 			currentView = t.view =
 				viewsByType[viewType] ||
 				(viewsByType[viewType] = t.instantiateView(viewType));
 
 			currentView.setElement(
-				$("<div class='fc-view fc-" + viewType + "-view' />").appendTo(content)
+				$("<div class='fc-views fc-" + viewType + "-views' />").appendTo(content)
 			);
 			header.activateButton(viewType);
 		}
 
 		if (currentView) {
 
-			// in case the view should render a period of time that is completely hidden
+			// in case the views should render a period of time that is completely hidden
 			date = currentView.massageCurrentDate(date);
 
-			// render or rerender the view
+			// render or rerender the views
 			if (
 				!currentView.displaying ||
 				!date.isWithin(currentView.intervalStart, currentView.intervalEnd) // implicit date window change
@@ -9739,7 +9739,7 @@ function Calendar_constructor(element, overrides) {
 	}
 
 
-	// Unrenders the current view and reflects this change in the Header.
+	// Unrenders the current views and reflects this change in the Header.
 	// Unregsiters the `currentView`, but does not remove from viewByType hash.
 	function clearView() {
 		header.deactivateButton(currentView.type);
@@ -9748,7 +9748,7 @@ function Calendar_constructor(element, overrides) {
 	}
 
 
-	// Destroys the view, including the view object. Then, re-instantiates it and renders it.
+	// Destroys the views, including the views object. Then, re-instantiates it and renders it.
 	// Maintains the same scroll state.
 	// TODO: maintain any other user-manipulated state.
 	function reinitView() {
@@ -9823,7 +9823,7 @@ function Calendar_constructor(element, overrides) {
 		if (
 			!ignoreWindowResize &&
 			ev.target === window && // so we don't process jqui "resize" events that have bubbled up
-			currentView.start // view has already been rendered
+			currentView.start // views has already been rendered
 		) {
 			if (updateSize(true)) {
 				currentView.trigger('windowResize', _element);
@@ -9835,7 +9835,7 @@ function Calendar_constructor(element, overrides) {
 	
 	/* Event Fetching/Rendering
 	-----------------------------------------------------------------------------*/
-	// TODO: going forward, most of this stuff should be directly handled by the view
+	// TODO: going forward, most of this stuff should be directly handled by the views
 
 
 	function refetchEvents() { // can be called as an API method
@@ -9976,8 +9976,8 @@ function Calendar_constructor(element, overrides) {
 	}
 
 
-	// Forces navigation to a view for the given date.
-	// `viewType` can be a specific view name or a generic one like "week" or "day".
+	// Forces navigation to a views for the given date.
+	// `viewType` can be a specific views name or a generic one like "week" or "day".
 	function zoomTo(newDate, viewType) {
 		var spec;
 
@@ -9998,7 +9998,7 @@ function Calendar_constructor(element, overrides) {
 
 	/* Height "Freezing"
 	-----------------------------------------------------------------------------*/
-	// TODO: move this into the view
+	// TODO: move this into the views
 
 	t.freezeContentHeight = freezeContentHeight;
 	t.unfreezeContentHeight = unfreezeContentHeight;
@@ -10097,7 +10097,7 @@ function Calendar_constructor(element, overrides) {
 			}
 		}
 
-		// catch-all. rerender the header and rebuild/rerender the current view
+		// catch-all. rerender the header and rebuild/rerender the current views
 		renderHeader();
 		viewsByType = {}; // even non-current views will be affected by this option change. do before rerender
 		reinitView();
@@ -11100,7 +11100,7 @@ function EventManager() { // assumed to be a calendar
 				source.className = [];
 			}
 
-			// for array sources, we convert to standard Event Objects up front
+			// for array sources, we convert to standard Event Objects up fronted
 			if ($.isArray(source.events)) {
 				source.origArray = source.events; // for removeEventSource
 				source.events = $.map(source.events, function(eventInput) {
@@ -11350,7 +11350,7 @@ function EventManager() { // assumed to be a calendar
 		cache = $.grep(cache, filter, true); // inverse=true
 
 		// Remove events from array sources.
-		// This works because they have been converted to official Event Objects up front.
+		// This works because they have been converted to official Event Objects up fronted.
 		// (and as a result, event._id has been calculated).
 		for (i=0; i<sources.length; i++) {
 			if ($.isArray(sources[i].events)) {
@@ -11817,7 +11817,7 @@ function EventManager() { // assumed to be a calendar
 	t.getBusinessHoursEvents = getBusinessHoursEvents;
 
 
-	// Returns an array of events as to when the business hours occur in the given view.
+	// Returns an array of events as to when the business hours occur in the given views.
 	// Abuse of our event system :(
 	function getBusinessHoursEvents(wholeDay) {
 		var optionVal = t.options.businessHours;
@@ -12061,7 +12061,7 @@ function backupEventDates(event) {
 
 ;;
 
-/* An abstract class for the "basic" views, as well as month view. Renders one or more rows of day cells.
+/* An abstract class for the "basic" views, as well as month views. Renders one or more rows of day cells.
 ----------------------------------------------------------------------------------------------------------------------*/
 // It is a manager for a DayGrid subcomponent, which does most of the heavy lifting.
 // It is responsible for managing width/height.
@@ -12092,7 +12092,7 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Generates the DayGrid object this view needs. Draws from this.dayGridClass
+	// Generates the DayGrid object this views needs. Draws from this.dayGridClass
 	instantiateDayGrid: function() {
 		// generate a subclass on the fly with BasicView-specific behavior
 		// TODO: cache this subclass
@@ -12131,14 +12131,14 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Renders the view into `this.el`, which should already be assigned
+	// Renders the views into `this.el`, which should already be assigned
 	renderDates: function() {
 
 		this.dayNumbersVisible = this.dayGrid.rowCnt > 1; // TODO: make grid responsible
 		this.weekNumbersVisible = this.opt('weekNumbers');
 		this.dayGrid.numbersVisible = this.dayNumbersVisible || this.weekNumbersVisible;
 
-		this.el.addClass('fc-basic-view').html(this.renderSkeletonHtml());
+		this.el.addClass('fc-basic-views').html(this.renderSkeletonHtml());
 		this.renderHead();
 
 		this.scroller.render();
@@ -12160,7 +12160,7 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Unrenders the content of the view. Since we haven't separated skeleton rendering from date rendering,
+	// Unrenders the content of the views. Since we haven't separated skeleton rendering from date rendering,
 	// always completely kill the dayGrid's rendering.
 	unrenderDates: function() {
 		this.dayGrid.unrenderDates();
@@ -12179,7 +12179,7 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Builds the HTML skeleton for the view.
+	// Builds the HTML skeleton for the views.
 	// The day-grid component will render inside of a container defined by this HTML.
 	renderSkeletonHtml: function() {
 		return '' +
@@ -12218,7 +12218,7 @@ var BasicView = FC.BasicView = View.extend({
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Refreshes the horizontal dimensions of the view
+	// Refreshes the horizontal dimensions of the views
 	updateWidth: function() {
 		if (this.weekNumbersVisible) {
 			// Make sure all week number cells running down the side have the same width.
@@ -12230,7 +12230,7 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Adjusts the vertical dimensions of the view to the specified values
+	// Adjusts the vertical dimensions of the views to the specified values
 	setHeight: function(totalHeight, isAuto) {
 		var eventLimit = this.opt('eventLimit');
 		var scrollerHeight;
@@ -12277,14 +12277,14 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// given a desired total height of the view, returns what the height of the scroller should be
+	// given a desired total height of the views, returns what the height of the scroller should be
 	computeScrollerHeight: function(totalHeight) {
 		return totalHeight -
 			subtractInnerElHeight(this.el, this.scroller.el); // everything that's NOT the scroller
 	},
 
 
-	// Sets the height of just the DayGrid component in this view
+	// Sets the height of just the DayGrid component in this views
 	setGridHeight: function(height, isAuto) {
 		if (isAuto) {
 			undistributeHeight(this.dayGrid.rowEls); // let the rows be their natural height with no expanding
@@ -12343,7 +12343,7 @@ var BasicView = FC.BasicView = View.extend({
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Renders the given events onto the view and populates the segments array
+	// Renders the given events onto the views and populates the segments array
 	renderEvents: function(events) {
 		this.dayGrid.renderEvents(events);
 
@@ -12351,7 +12351,7 @@ var BasicView = FC.BasicView = View.extend({
 	},
 
 
-	// Retrieves all segment objects that are rendered in the view
+	// Retrieves all segment objects that are rendered in the views
 	getEventSegs: function() {
 		return this.dayGrid.getEventSegs();
 	},
@@ -12467,7 +12467,7 @@ var basicDayGridMethods = {
 
 ;;
 
-/* A month view with day cells running in rows (one-per-week) and columns
+/* A month views with day cells running in rows (one-per-week) and columns
 ----------------------------------------------------------------------------------------------------------------------*/
 
 var MonthView = FC.MonthView = BasicView.extend({
@@ -12547,7 +12547,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	scroller: null,
 
 	timeGridClass: TimeGrid, // class used to instantiate the timeGrid. subclasses can override
-	timeGrid: null, // the main time-grid subcomponent of this view
+	timeGrid: null, // the main time-grid subcomponent of this views
 
 	dayGridClass: DayGrid, // class used to instantiate the dayGrid. subclasses can override
 	dayGrid: null, // the "all-day" subcomponent. if all-day is turned off, this will be null
@@ -12565,7 +12565,7 @@ var AgendaView = FC.AgendaView = View.extend({
 		this.timeGrid = this.instantiateTimeGrid();
 
 		if (this.opt('allDaySlot')) { // should we display the "all-day" area?
-			this.dayGrid = this.instantiateDayGrid(); // the all-day subcomponent of this view
+			this.dayGrid = this.instantiateDayGrid(); // the all-day subcomponent of this views
 		}
 
 		this.scroller = new Scroller({
@@ -12575,7 +12575,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Instantiates the TimeGrid object this view needs. Draws from this.timeGridClass
+	// Instantiates the TimeGrid object this views needs. Draws from this.timeGridClass
 	instantiateTimeGrid: function() {
 		var subclass = this.timeGridClass.extend(agendaTimeGridMethods);
 
@@ -12583,7 +12583,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Instantiates the DayGrid object this view might need. Draws from this.dayGridClass
+	// Instantiates the DayGrid object this views might need. Draws from this.dayGridClass
 	instantiateDayGrid: function() {
 		var subclass = this.dayGridClass.extend(agendaDayGridMethods);
 
@@ -12606,10 +12606,10 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Renders the view into `this.el`, which has already been assigned
+	// Renders the views into `this.el`, which has already been assigned
 	renderDates: function() {
 
-		this.el.addClass('fc-agenda-view').html(this.renderSkeletonHtml());
+		this.el.addClass('fc-agenda-views').html(this.renderSkeletonHtml());
 		this.renderHead();
 
 		this.scroller.render();
@@ -12644,7 +12644,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Unrenders the content of the view. Since we haven't separated skeleton rendering from date rendering,
+	// Unrenders the content of the views. Since we haven't separated skeleton rendering from date rendering,
 	// always completely kill each grid's rendering.
 	unrenderDates: function() {
 		this.timeGrid.unrenderDates();
@@ -12659,7 +12659,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Builds the HTML skeleton for the view.
+	// Builds the HTML skeleton for the views.
 	// The day-grid and time-grid components will render inside containers defined by this HTML.
 	renderSkeletonHtml: function() {
 		return '' +
@@ -12745,14 +12745,14 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Refreshes the horizontal dimensions of the view
+	// Refreshes the horizontal dimensions of the views
 	updateWidth: function() {
 		// make all axis cells line up, and record the width so newly created axis cells will have it
 		this.axisWidth = matchCellWidths(this.el.find('.fc-axis'));
 	},
 
 
-	// Adjusts the vertical dimensions of the view to the specified values
+	// Adjusts the vertical dimensions of the views to the specified values
 	setHeight: function(totalHeight, isAuto) {
 		var eventLimit;
 		var scrollerHeight;
@@ -12805,7 +12805,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// given a desired total height of the view, returns what the height of the scroller should be
+	// given a desired total height of the views, returns what the height of the scroller should be
 	computeScrollerHeight: function(totalHeight) {
 		return totalHeight -
 			subtractInnerElHeight(this.el, this.scroller.el); // everything that's NOT the scroller
@@ -12890,7 +12890,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	------------------------------------------------------------------------------------------------------------------*/
 
 
-	// Renders events onto the view and populates the View's segment array
+	// Renders events onto the views and populates the View's segment array
 	renderEvents: function(events) {
 		var dayEvents = [];
 		var timedEvents = [];
@@ -12919,7 +12919,7 @@ var AgendaView = FC.AgendaView = View.extend({
 	},
 
 
-	// Retrieves all segment objects that are rendered in the view
+	// Retrieves all segment objects that are rendered in the views
 	getEventSegs: function() {
 		return this.timeGrid.getEventSegs().concat(
 			this.dayGrid ? this.dayGrid.getEventSegs() : []

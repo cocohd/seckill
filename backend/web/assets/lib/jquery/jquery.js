@@ -4534,7 +4534,7 @@ var wrapMap = {
 	td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
 
 	// IE6-8 can't serialize link, script, style, or any html5 (NoScope) tags,
-	// unless wrapped in a div with non-breaking characters in front of it.
+	// unless wrapped in a div with non-breaking characters in fronted of it.
 	_default: support.htmlSerialize ? [ 0, "", "" ] : [ 1, "X<div>", "</div>" ]
 };
 
@@ -4945,7 +4945,7 @@ jQuery.event = {
 				}
 			}
 
-			// Add to the element's handler list, delegates in front
+			// Add to the element's handler list, delegates in fronted
 			if ( selector ) {
 				handlers.splice( handlers.delegateCount++, 0, handleObj );
 			} else {
@@ -5344,7 +5344,7 @@ jQuery.event = {
 
 	// Includes some event props shared by KeyEvent and MouseEvent
 	props: ( "altKey bubbles cancelable ctrlKey currentTarget detail eventPhase " +
-		"metaKey relatedTarget shiftKey target timeStamp view which" ).split( " " ),
+		"metaKey relatedTarget shiftKey target timeStamp views which" ).split( " " ),
 
 	fixHooks: {},
 

@@ -235,7 +235,7 @@
 				this.$element.find('.steps').first().attr('style', 'margin-left: -' + newMargin + 'px');
 
 				// set the position so that the active step is in a good
-				// position if it has been moved out of view
+				// position if it has been moved out of views
 				if (this.$element.find('li.active').first().position().left < 200) {
 					newMargin += this.$element.find('li.active').first().position().left - 200;
 					if (newMargin < 1) {

@@ -7,7 +7,7 @@ var App = (function () {
 
   //Basic Config
   var config = {
-    assetsPath: 'assets',
+    assetsPath: 'public',
     imgPath: 'img',
     jsPath: 'js',
     libsPath: 'lib',

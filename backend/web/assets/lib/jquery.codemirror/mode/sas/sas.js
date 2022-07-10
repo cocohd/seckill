@@ -57,7 +57,7 @@
       }
     }
     //datastep
-    define('def', 'stack pgm view source debug nesting nolist', ['inDataStep']);
+    define('def', 'stack pgm views source debug nesting nolist', ['inDataStep']);
     define('def', 'if while until for do do; end end; then else cancel', ['inDataStep']);
     define('def', 'label format _n_ _error_', ['inDataStep']);
     define('def', 'ALTER BUFNO BUFSIZE CNTLLEV COMPRESS DLDMGACTION ENCRYPT ENCRYPTKEY EXTENDOBSCOUNTER GENMAX GENNUM INDEX LABEL OBSBUF OUTREP PW PWREQ READ REPEMPTY REPLACE REUSE ROLE SORTEDBY SPILL TOBSNO TYPE WRITE FILECLOSE FIRSTOBS IN OBS POINTOBS WHERE WHEREUP IDXNAME IDXWHERE DROP KEEP RENAME', ['inDataStep']);

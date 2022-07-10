@@ -12,7 +12,7 @@
 
   var START = 0, FRONTMATTER = 1, BODY = 2
 
-  // a mixed mode for Markdown text with an optional YAML front matter
+  // a mixed mode for Markdown text with an optional YAML fronted matter
   CodeMirror.defineMode("yaml-frontmatter", function (config, parserConfig) {
     var yamlMode = CodeMirror.getMode(config, "yaml")
     var innerMode = CodeMirror.getMode(config, parserConfig && parserConfig.base || "gfm")

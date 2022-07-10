@@ -13263,7 +13263,7 @@
 		"aaSorting": null,
 	
 		/**
-		 * Sorting that is always applied to the table (i.e. prefixed in front of
+		 * Sorting that is always applied to the table (i.e. prefixed in fronted of
 		 * aaSorting).
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.

@@ -142,7 +142,7 @@
     if ('minView' in options) {
       this.minView = options.minView;
     } else if ('minView' in this.element.data()) {
-      this.minView = this.element.data('min-view');
+      this.minView = this.element.data('min-views');
     }
     this.minView = DPGlobal.convertViewMode(this.minView);
 
@@ -150,7 +150,7 @@
     if ('maxView' in options) {
       this.maxView = options.maxView;
     } else if ('maxView' in this.element.data()) {
-      this.maxView = this.element.data('max-view');
+      this.maxView = this.element.data('max-views');
     }
     this.maxView = DPGlobal.convertViewMode(this.maxView);
 
@@ -158,7 +158,7 @@
     if ('wheelViewModeNavigation' in options) {
       this.wheelViewModeNavigation = options.wheelViewModeNavigation;
     } else if ('wheelViewModeNavigation' in this.element.data()) {
-      this.wheelViewModeNavigation = this.element.data('view-mode-wheel-navigation');
+      this.wheelViewModeNavigation = this.element.data('views-mode-wheel-navigation');
     }
 
     this.wheelViewModeNavigationInverseDirection = false;
@@ -166,21 +166,21 @@
     if ('wheelViewModeNavigationInverseDirection' in options) {
       this.wheelViewModeNavigationInverseDirection = options.wheelViewModeNavigationInverseDirection;
     } else if ('wheelViewModeNavigationInverseDirection' in this.element.data()) {
-      this.wheelViewModeNavigationInverseDirection = this.element.data('view-mode-wheel-navigation-inverse-dir');
+      this.wheelViewModeNavigationInverseDirection = this.element.data('views-mode-wheel-navigation-inverse-dir');
     }
 
     this.wheelViewModeNavigationDelay = 100;
     if ('wheelViewModeNavigationDelay' in options) {
       this.wheelViewModeNavigationDelay = options.wheelViewModeNavigationDelay;
     } else if ('wheelViewModeNavigationDelay' in this.element.data()) {
-      this.wheelViewModeNavigationDelay = this.element.data('view-mode-wheel-navigation-delay');
+      this.wheelViewModeNavigationDelay = this.element.data('views-mode-wheel-navigation-delay');
     }
 
     this.startViewMode = 2;
     if ('startView' in options) {
       this.startViewMode = options.startView;
     } else if ('startView' in this.element.data()) {
-      this.startViewMode = this.element.data('start-view');
+      this.startViewMode = this.element.data('start-views');
     }
     this.startViewMode = DPGlobal.convertViewMode(this.startViewMode);
     this.viewMode = this.startViewMode;
@@ -189,7 +189,7 @@
     if ('viewSelect' in options) {
       this.viewSelect = options.viewSelect;
     } else if ('viewSelect' in this.element.data()) {
-      this.viewSelect = this.element.data('view-select');
+      this.viewSelect = this.element.data('views-select');
     }
     this.viewSelect = DPGlobal.convertViewMode(this.viewSelect);
 

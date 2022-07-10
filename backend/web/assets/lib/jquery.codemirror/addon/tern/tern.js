@@ -18,7 +18,7 @@
 // * fileFilter: A function(value, docName, doc) that will be applied
 //   to documents before passing them on to Tern.
 // * switchToDoc: A function(name, doc) that should, when providing a
-//   multi-file view, switch the view or focus to the named file.
+//   multi-file views, switch the views or focus to the named file.
 // * showError: A function(editor, message) that can be used to
 //   override the way errors are displayed.
 // * completionTip: Customize the content in tooltips for completions.

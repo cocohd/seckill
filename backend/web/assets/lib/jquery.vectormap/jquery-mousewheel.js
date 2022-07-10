@@ -75,7 +75,7 @@ function handler(event) {
     if ( orgEvent.wheelDeltaY !== undefined ) { deltaY = orgEvent.wheelDeltaY/120; }
     if ( orgEvent.wheelDeltaX !== undefined ) { deltaX = -1*orgEvent.wheelDeltaX/120; }
 
-    // Add event and delta to the front of the arguments
+    // Add event and delta to the fronted of the arguments
     args.unshift(event, delta, deltaX, deltaY);
 
     return ($.event.dispatch || $.event.handle).apply(this, args);

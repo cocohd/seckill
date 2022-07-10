@@ -22,7 +22,7 @@ func (p *ProductController) GetAll() mvc.View {
 		log.Println(err)
 	}
 	return mvc.View{
-		Name: "product/view.html",
+		Name: "product/views.html",
 		Data: iris.Map{
 			"productArray": productArray,
 		},

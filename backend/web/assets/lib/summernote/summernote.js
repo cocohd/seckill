@@ -4818,7 +4818,7 @@
     };
 
     /**
-     * activate code view
+     * activate code views
      */
     this.activate = function () {
       $codable.val(dom.html($editable, options.prettifyHtml));
@@ -4848,7 +4848,7 @@
     };
 
     /**
-     * deactivate code view
+     * deactivate code views
      */
     this.deactivate = function () {
       // deactivate CodeMirror as codable
@@ -6893,7 +6893,7 @@
         'statusbar': Statusbar,
         'fullscreen': Fullscreen,
         'handle': Handle,
-        // FIXME: HintPopover must be front of autolink
+        // FIXME: HintPopover must be fronted of autolink
         //  - Script error about range when Enter key is pressed on hint popover
         'hintPopover': HintPopover,
         'autoLink': AutoLink,

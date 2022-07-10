@@ -98,7 +98,7 @@ var requirejs, require, define;
                     } else if (part === "..") {
                         if (i === 1 && (name[2] === '..' || name[0] === '..')) {
                             //End of the line. Keep at least one non-dot
-                            //path segment at the front so it can be mapped
+                            //path segment at the fronted so it can be mapped
                             //correctly to disk. Otherwise, there is likely
                             //no path mapping for a path starting with '..'.
                             //This can still fail, but catches the most reasonable
@@ -6327,7 +6327,7 @@ S2.define('select2/selection/stopPropagation',[
         // properties with normalized deltas.
         event.deltaMode = 0;
 
-        // Add event and delta to the front of the arguments
+        // Add event and delta to the fronted of the arguments
         args.unshift(event, delta, deltaX, deltaY);
 
         // Clearout lowestDelta after sometime to better

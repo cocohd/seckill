@@ -6106,7 +6106,7 @@ module.exports = function(Chart) {
 				_datasetIndex: me.index,
 				_index: index,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: me.calculateBarX(index, me.index),
 					y: reset ? scaleBase : me.calculateBarY(index, me.index),
@@ -6380,7 +6380,7 @@ module.exports = function(Chart) {
 				_datasetIndex: me.index,
 				_index: index,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: reset ? scaleBase : me.calculateBarX(index, me.index),
 					y: me.calculateBarY(index, me.index),
@@ -6676,7 +6676,7 @@ module.exports = function(Chart) {
 				_datasetIndex: dsIndex,
 				_index: index,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: reset ? xScale.getPixelForDecimal(0.5) : xScale.getPixelForValue(typeof data === 'object' ? data : NaN, index, dsIndex, me.chart.isCombo),
 					y: reset ? yScale.getBasePixel() : yScale.getPixelForValue(data, index, dsIndex),
@@ -6934,7 +6934,7 @@ module.exports = function(Chart) {
 				_datasetIndex: me.index,
 				_index: index,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: centerX + chart.offsetX,
 					y: centerY + chart.offsetY,
@@ -7212,7 +7212,7 @@ module.exports = function(Chart) {
 			point._datasetIndex = datasetIndex;
 			point._index = index;
 
-			// Desired view properties
+			// Desired views properties
 			point._model = {
 				x: x,
 				y: y,
@@ -7523,7 +7523,7 @@ module.exports = function(Chart) {
 				_index: index,
 				_scale: scale,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: centerX,
 					y: centerY,
@@ -7669,7 +7669,7 @@ module.exports = function(Chart) {
 				_index: index,
 				_scale: scale,
 
-				// Desired view properties
+				// Desired views properties
 				_model: {
 					x: reset ? scale.xCenter : pointPosition.x, // value not used in dataset scale, but we want a consistent API between scales
 					y: reset ? scale.yCenter : pointPosition.y,
