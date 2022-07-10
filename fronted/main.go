@@ -46,6 +46,17 @@ func main() {
 	userPro.Register(userService, ctx, sess.Start)
 	userPro.Handle(new(controllers.UserController))
 
+	// 注册商品详情管理
+	product := repositories.NewProductManager("product", db)
+	productService := services.NewProductService(product)
+	order := repositories.NewOrderManager("order", db)
+	orderService := services.NewOrderService(order)
+
+	productPro := app.Party("/product")
+	pro := mvc.New(productPro)
+	pro.Register(productService, orderService)
+	pro.Handle(new(controllers.ProductController))
+
 	app.Run(
 		iris.Addr("localhost:8082"),
 		iris.WithoutServerError(iris.ErrServerClosed),

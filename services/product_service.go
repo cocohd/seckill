@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"seckill/datamodels"
 	"seckill/repositories"
 )
@@ -23,6 +24,7 @@ func NewProductService(repository repositories.IProduct) IProductService {
 }
 
 func (p *ProductService) GetProductByID(productID int64) (*datamodels.Product, error) {
+	fmt.Println("********product_service**************")
 	return p.productRepository.SelectByKey(productID)
 }
 

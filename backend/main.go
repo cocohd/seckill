@@ -20,7 +20,7 @@ func main() {
 	tmplate := iris.HTML("./backend/web/views", ".html").Layout("shared/layout.html").Reload(true)
 	app.RegisterView(tmplate)
 	//4.设置模板目标
-	app.HandleDir("/public", "./backend/web/public")
+	app.HandleDir("/assets", "./backend/web/assets")
 	//出现异常跳转到指定页面
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		ctx.ViewData("message", ctx.Values().GetStringDefault("message", "访问的页面出错！"))

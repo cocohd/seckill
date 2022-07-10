@@ -22,14 +22,14 @@ func (p *ProductController) GetAll() mvc.View {
 		log.Println(err)
 	}
 	return mvc.View{
-		Name: "product/views.html",
+		Name: "product/view.html",
 		Data: iris.Map{
 			"productArray": productArray,
 		},
 	}
 }
 
-// 修改商品
+// PostUpdate 修改商品
 func (p *ProductController) PostUpdate() {
 	product := &datamodels.Product{}
 	// 解析表单

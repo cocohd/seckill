@@ -97,14 +97,19 @@ func (p *ProductManager) Update(product *datamodels.Product) error {
 }
 
 func (p *ProductManager) SelectByKey(productID int64) (productResult *datamodels.Product, err error) {
+	fmt.Println("********product_repository**************")
+
 	if err = p.Conn(); err != nil {
 		return
 	}
 
+	fmt.Println("**********3333**********")
 	sql := "select * from " + p.table + " where ID=" + strconv.FormatInt(productID, 10)
 
 	rows, err := p.mysqlConn.Query(sql)
 	defer rows.Close()
+	fmt.Println("**********3333**********")
+
 	if err != nil {
 		return
 	}
