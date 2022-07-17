@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"seckill/common"
 	"seckill/datamodels"
 )
@@ -24,10 +25,11 @@ func NewUserManager(table string, db *sql.DB) IUserRepository {
 
 func (u *UserManager) Conn() (err error) {
 	if u.db == nil {
-		u.db, err = common.NewMysqlConn()
+		sqlDB, err := common.NewMysqlConn()
 		if err != nil {
 			return err
 		}
+		u.db = sqlDB
 	}
 
 	if u.table == "" {
@@ -37,11 +39,15 @@ func (u *UserManager) Conn() (err error) {
 }
 
 func (u *UserManager) Insert(user *datamodels.User) (userId int64, err error) {
+	fmt.Println("*-/-/-/-Insert-/-/-/----/-", user)
+
 	if err = u.Conn(); err != nil {
 		return 0, err
 	}
 
-	sql := "insert into " + u.table + " set nickName=?, userName=?, hashedPwd=?"
+	fmt.Println("*-/-/-/-***-/-/-/----/-", user)
+
+	sql := "insert " + u.table + " set nickName=?,userName=?,hashedPwd=?"
 	stmt, err := u.db.Prepare(sql)
 	if err != nil {
 		return 0, err

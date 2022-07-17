@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"seckill/datamodels"
 	"seckill/repositories"
@@ -13,11 +14,11 @@ type IUserService interface {
 }
 
 type UserService struct {
-	userRepository repositories.IUserRepository
+	UserRepository repositories.IUserRepository
 }
 
 func NewUserService(userRepository repositories.IUserRepository) IUserService {
-	return &UserService{userRepository: userRepository}
+	return &UserService{UserRepository: userRepository}
 }
 
 func (u *UserService) AddUser(user *datamodels.User) (id int64, err error) {
@@ -26,11 +27,12 @@ func (u *UserService) AddUser(user *datamodels.User) (id int64, err error) {
 		return 0, err
 	}
 	user.HashedPwd = string(pwdDecoded)
-	return u.userRepository.Insert(user)
+	fmt.Println("*&^%^&%^&*^^&^^&&&", user.HashedPwd)
+	return u.UserRepository.Insert(user)
 }
 
 func (u *UserService) IsPwdSuc(userName string, pwd string) (user *datamodels.User, isOk bool) {
-	user, err := u.userRepository.SelectByUserName(userName)
+	user, err := u.UserRepository.SelectByUserName(userName)
 	if err != nil {
 		return &datamodels.User{}, false
 	}

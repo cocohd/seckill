@@ -4,12 +4,10 @@ import (
 	"context"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/kataras/iris/v12/sessions"
 	"seckill/common"
 	"seckill/fronted/web/controllers"
 	"seckill/repositories"
 	"seckill/services"
-	"time"
 )
 
 func main() {
@@ -18,10 +16,14 @@ func main() {
 	//2.设置错误模式，在mvc模式下提示错误
 	app.Logger().SetLevel("debug")
 	//3.注册模板
-	tmplate := iris.HTML("./fronted/web/views", ".html").Layout("shared/layout.html").Reload(true)
-	app.RegisterView(tmplate)
+	template := iris.HTML("./fronted/web/views", ".html").Layout("shared/layout.html").Reload(true)
+	app.RegisterView(template)
+
 	//4.设置模板
 	app.HandleDir("/public", "./fronted/web/public")
+	//设置静态html访问
+	app.HandleDir("/html", "./fronted/web/htmlProductShow")
+
 	//出现异常跳转到指定页面
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		ctx.ViewData("message", ctx.Values().GetStringDefault("message", "访问的页面出错！"))
@@ -33,17 +35,19 @@ func main() {
 	if err != nil {
 
 	}
-	sess := sessions.New(sessions.Config{
-		Cookie:  "AdminCookie",
-		Expires: 600 * time.Minute,
-	})
+	//sess := sessions.New(sessions.Config{
+	//	Cookie:  "AdminCookie",
+	//	Expires: 600 * time.Minute,
+	//})
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	user := repositories.NewUserManager("user", db)
 	userService := services.NewUserService(user)
 	userPro := mvc.New(app.Party("/user"))
-	userPro.Register(userService, ctx, sess.Start)
+	//userPro.Register(userService, ctx, sess.Start)
+	userPro.Register(userService, ctx)
 	userPro.Handle(new(controllers.UserController))
 
 	// 注册商品详情管理
