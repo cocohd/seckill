@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"seckill/common"
 	"seckill/fronted/web/controllers"
+	"seckill/rabbitmq"
 	"seckill/repositories"
 	"seckill/services"
 )
@@ -56,9 +57,12 @@ func main() {
 	order := repositories.NewOrderManager("order", db)
 	orderService := services.NewOrderService(order)
 
+	// 注册rabbitMQ
+	rabbitmq := rabbitmq.NewRabbitMQSimple("seckill")
+
 	productPro := app.Party("/product")
 	pro := mvc.New(productPro)
-	pro.Register(productService, orderService)
+	pro.Register(productService, orderService, ctx, rabbitmq)
 	pro.Handle(new(controllers.ProductController))
 
 	app.Run(

@@ -58,6 +58,8 @@ func (u *UserController) PostLogin() mvc.Response {
 
 	//	验证账号密码是否正确
 	user, isOk := u.UserService.IsPwdSuc(userName, pwd)
+	fmt.Println(user.ID, user.UserName, user.HashedPwd)
+
 	if !isOk {
 		return mvc.Response{
 			Path: "/user/login",

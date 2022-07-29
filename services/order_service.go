@@ -12,6 +12,7 @@ type IOrderService interface {
 	GetOrderByID(int64) (*datamodels.Order, error)
 	GetAllOrder() ([]*datamodels.Order, error)
 	GetAllOrderInfo() (map[int]map[string]string, error)
+	InsertOrderByMessage(message *datamodels.Message) (int64, error)
 }
 
 type OrderService struct {
@@ -44,4 +45,14 @@ func (o *OrderService) GetAllOrder() (orders []*datamodels.Order, err error) {
 
 func (o *OrderService) GetAllOrderInfo() (orderMap map[int]map[string]string, err error) {
 	return o.orderRepositories.SelectAllWithInfo()
+}
+
+func (o *OrderService) InsertOrderByMessage(message *datamodels.Message) (orderID int64, err error) {
+	order := &datamodels.Order{
+		UserID:      message.UserId,
+		ProductID:   message.ProductId,
+		OrderStatus: datamodels.OrderSuccess,
+	}
+
+	return o.orderRepositories.Insert(order)
 }

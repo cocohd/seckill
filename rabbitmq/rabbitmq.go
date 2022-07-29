@@ -5,17 +5,16 @@ import (
 	"github.com/streadway/amqp"
 	"log"
 
-	"imooc-product/services"
-	"imooc-product/datamodels"
 	"encoding/json"
+	"seckill/datamodels"
+	"seckill/services"
 	"sync"
 )
 
-//连接信息
-//const MQURL = "amqp://imoocuser:imoocuser@172.31.96.59:5672/imooc"
-const MQURL = "amqp://imoocuser:imoocuser@127.0.0.1:5672/imooc"
+// MQURL 连接信息
+const MQURL = "amqp://guest:guest@127.0.0.1:5672/seckill"
 
-//rabbitMQ结构体
+// RabbitMQ rabbitMQ结构体
 type RabbitMQ struct {
 	conn    *amqp.Connection
 	channel *amqp.Channel
@@ -30,12 +29,12 @@ type RabbitMQ struct {
 	sync.Mutex
 }
 
-//创建结构体实例
+// NewRabbitMQ 创建结构体实例
 func NewRabbitMQ(queueName string, exchange string, key string) *RabbitMQ {
 	return &RabbitMQ{QueueName: queueName, Exchange: exchange, Key: key, Mqurl: MQURL}
 }
 
-//断开channel 和 connection
+// Destory 断开channel 和 connection
 func (r *RabbitMQ) Destory() {
 	r.channel.Close()
 	r.conn.Close()
@@ -49,7 +48,7 @@ func (r *RabbitMQ) failOnErr(err error, message string) {
 	}
 }
 
-//创建简单模式下RabbitMQ实例
+// NewRabbitMQSimple 创建简单模式下RabbitMQ实例
 func NewRabbitMQSimple(queueName string) *RabbitMQ {
 	//创建RabbitMQ实例
 	rabbitmq := NewRabbitMQ(queueName, "", "")
@@ -64,7 +63,7 @@ func NewRabbitMQSimple(queueName string) *RabbitMQ {
 	return rabbitmq
 }
 
-//直接模式队列生产
+// PublishSimple 直接模式队列生产
 func (r *RabbitMQ) PublishSimple(message string) error {
 	r.Lock()
 	defer r.Unlock()
@@ -100,8 +99,8 @@ func (r *RabbitMQ) PublishSimple(message string) error {
 	return nil
 }
 
-//simple 模式下消费者
-func (r *RabbitMQ) ConsumeSimple(orderService services.IOrderService,productService services.IProductService) {
+// ConsumeSimple simple 模式下消费者
+func (r *RabbitMQ) ConsumeSimple(orderService services.IOrderService, productService services.IProductService) {
 	//1.申请队列，如果队列不存在会自动创建，存在则跳过创建
 	q, err := r.channel.QueueDeclare(
 		r.QueueName,
@@ -122,8 +121,8 @@ func (r *RabbitMQ) ConsumeSimple(orderService services.IOrderService,productServ
 
 	//消费者流控
 	r.channel.Qos(
-		1, //当前消费者一次能接受的最大消息数量
-		0, //服务器传递的最大容量（以八位字节为单位）
+		1,     //当前消费者一次能接受的最大消息数量
+		0,     //服务器传递的最大容量（以八位字节为单位）
 		false, //如果设置为true 对channel可用
 	)
 
@@ -154,23 +153,24 @@ func (r *RabbitMQ) ConsumeSimple(orderService services.IOrderService,productServ
 			//消息逻辑处理，可以自行设计逻辑
 			log.Printf("Received a message: %s", d.Body)
 			message := &datamodels.Message{}
-			err :=json.Unmarshal([]byte(d.Body),message)
-			if err !=nil {
+			err := json.Unmarshal([]byte(d.Body), message)
+			if err != nil {
 				fmt.Println(err)
 			}
 			//插入订单
-			_,err=orderService.InsertOrderByMessage(message)
-			if err !=nil {
+			_, err = orderService.InsertOrderByMessage(message)
+			if err != nil {
 				fmt.Println(err)
 			}
 
 			//扣除商品数量
-			err = productService.SubNumberOne(message.ProductID)
-			if err !=nil {
+			err = productService.SubProductNum(message.ProductId)
+			if err != nil {
 				fmt.Println(err)
 			}
 			//如果为true表示确认所有未确认的消息，
 			//为false表示确认当前消息
+			// 返回false，rabbit服务器删除已消费消息
 			d.Ack(false)
 		}
 	}()

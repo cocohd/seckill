@@ -29,7 +29,7 @@ type ConsistentHash struct {
 	circle      map[uint32]string
 	sortedKey   units
 	virtualNode int
-	mutex       *sync.Mutex
+	mutex       sync.Mutex
 }
 
 func NewConsistentHash(replicas int) *ConsistentHash {
