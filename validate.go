@@ -1,10 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"seckill/common"
+	"seckill/datamodels"
+	"seckill/encrypt"
+	"seckill/rabbitmq"
 	"strconv"
 	"sync"
 )
@@ -16,7 +21,14 @@ var hostArray = []string{"127.0.0.1", "127.0.0.1"}
 
 var localHost = "127.0.0.1"
 
+// SLB的ip，就是获取数量控制接口的主机
+var getOne = "127.0.0.1"
+var getOnePort = "8084"
+
 var port = "8081"
+
+// rabbitmq
+var rabbitMqValidate *rabbitmq.RabbitMQ
 
 var hashConsistent *common.ConsistentHash
 
@@ -77,37 +89,75 @@ func (a *AccessControl) getDataFromLocal(uid string) bool {
 	return false
 }
 
-func GetDataFromOther(host string, r *http.Request) bool {
+// GetCurUrl 优化转发请求代码
+func GetCurUrl(hostUrl string, r *http.Request) (rsp *http.Response, body []byte, err error) {
 	//获取Uid
 	uidPre, err := r.Cookie("uid")
 	if err != nil {
-		return false
+		return
 	}
 	//获取sign
 	uidSign, err := r.Cookie("sign")
 	if err != nil {
-		return false
+		return
 	}
 
-	client := http.Client{}
-	request, err := http.NewRequest("GET", "http://"+host+":"+port+"/check", nil)
+	// 模拟接口访问
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", hostUrl, nil)
 	if err != nil {
-		return false
+		return
 	}
 
 	cookieUid := &http.Cookie{Name: "uid", Value: uidPre.Value, Path: "/"}
-	cookieSign := &http.Cookie{Name: "uid", Value: uidSign.Value, Path: "/"}
-	// 添加新的cookie到新请求中
-	request.AddCookie(cookieUid)
-	request.AddCookie(cookieSign)
+	cookieSign := &http.Cookie{Name: "sign", Value: uidSign.Value, Path: "/"}
+	req.AddCookie(cookieUid)
+	req.AddCookie(cookieSign)
 
-	// 发送请求
-	response, err := client.Do(request)
-	if err != nil {
-		return false
-	}
+	rsp, err = client.Do(req)
+	defer rsp.Body.Close()
 
-	body, err := ioutil.ReadAll(response.Body)
+	body, err = ioutil.ReadAll(rsp.Body)
+	return
+}
+
+func GetDataFromOther(host string, r *http.Request) bool {
+	////获取Uid
+	//uidPre, err := r.Cookie("uid")
+	//if err != nil {
+	//	return false
+	//}
+	////获取sign
+	//uidSign, err := r.Cookie("sign")
+	//if err != nil {
+	//	return false
+	//}
+	//
+	//client := http.Client{}
+	//request, err := http.NewRequest("GET", "http://"+host+":"+port+"/check", nil)
+	//if err != nil {
+	//	return false
+	//}
+	//
+	//cookieUid := &http.Cookie{Name: "uid", Value: uidPre.Value, Path: "/"}
+	//cookieSign := &http.Cookie{Name: "uid", Value: uidSign.Value, Path: "/"}
+	//// 添加新的cookie到新请求中
+	//request.AddCookie(cookieUid)
+	//request.AddCookie(cookieSign)
+	//
+	//// 发送请求
+	//response, err := client.Do(request)
+	//if err != nil {
+	//	return false
+	//}
+	//
+	//body, err := ioutil.ReadAll(response.Body)
+	//if err != nil {
+	//	return false
+	//}
+
+	hostUrl := "http://" + host + ":" + port + "/checkRight"
+	response, body, err := GetCurUrl(hostUrl, r)
 	if err != nil {
 		return false
 	}
@@ -124,13 +174,117 @@ func GetDataFromOther(host string, r *http.Request) bool {
 	return false
 }
 
-func webHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("正常执行业务函数"))
+//func webHandler(w http.ResponseWriter, r *http.Request) {
+//	w.Write([]byte("正常执行业务函数"))
+//}
+
+func Auth(w http.ResponseWriter, r *http.Request) error {
+	err := CheckUserInfo(r)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func filterHandler(w http.ResponseWriter, r *http.Request) error {
-	w.Write([]byte("执行拦截器函数"))
-	return errors.New("我是你大爹！！！")
+// CheckUserInfo 身份校验
+func CheckUserInfo(r *http.Request) error {
+	// 获取uid和sign的cookie
+	uidCookie, err := r.Cookie("uid")
+	if err != nil {
+		return errors.New("用户UID Cookie 获取失败！")
+	}
+	signCookie, err := r.Cookie("sign")
+	// 获取uid和sign的cookie
+	if err != nil {
+		return errors.New("用户sign Cookie 获取失败！")
+	}
+
+	// signCookie进行解密
+	signByte, err := encrypt.DecodeMess(signCookie.Value)
+	if err != nil {
+		return errors.New("用户加密串 Cookie 获取失败！")
+	}
+
+	if checkInfo(uidCookie.Value, string(signByte)) {
+		return nil
+	}
+	return errors.New("身份校验失败！")
+}
+
+func checkInfo(uid, sign string) bool {
+	if uid == sign {
+		return true
+	}
+	return false
+}
+
+// 执行正常执行业务
+func check(w http.ResponseWriter, r *http.Request) {
+	// 从url中获取productId和从cookie中获取userId
+	queryForm, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil || len(queryForm["productID"]) <= 0 {
+		w.Write([]byte("false"))
+		return
+	}
+	productIdString := queryForm["productID"][0]
+	userCookie, err := r.Cookie("uid")
+	if err != nil {
+		w.Write([]byte("false"))
+		return
+	}
+
+	// 1.分布式权限验证
+	right := accessControl.getDistributeAddr(r)
+	if right == false {
+		w.Write([]byte("false"))
+		return
+	}
+
+	// 2.获取数量控制，防止超卖
+	hostUrl := "http://" + getOne + ":" + getOnePort + "/getOne"
+	responseValidation, responseBody, err := GetCurUrl(hostUrl, r)
+	if err != nil {
+		w.Write([]byte("false"))
+		// 待做：若存在err，还需要对getOne就行反向操作，即数量减一
+		return
+	}
+
+	if responseValidation.StatusCode == 200 {
+		if string(responseBody) == "true" {
+			//	整合下单:生成消息，推送rabbitmq
+			productID, err := strconv.ParseInt(productIdString, 10, 64)
+			if err != nil {
+				w.Write([]byte("false"))
+				return
+			}
+			userID, err := strconv.ParseInt(userCookie.Value, 10, 64)
+			if err != nil {
+				w.Write([]byte("false"))
+				return
+			}
+
+			// 创建消息体
+			message := datamodels.Message{
+				ProductId: productID,
+				UserId:    userID,
+			}
+			byteMessage, err := json.Marshal(message)
+			if err != nil {
+				w.Write([]byte("false"))
+				return
+			}
+			// 生产消息
+			err = rabbitMqValidate.PublishSimple(string(byteMessage))
+			if err != nil {
+				w.Write([]byte("false"))
+				return
+			}
+			w.Write([]byte("true"))
+			return
+		}
+	}
+	w.Write([]byte("false"))
+	return
 }
 
 /*拦截器*/
@@ -140,9 +294,16 @@ func main() {
 		hashConsistent.Add(v)
 	}
 
-	filter := common.NewFilter()
-	filter.RegisterFilterHandler("/check", filterHandler)
+	// 实例化rabbitmq
+	rabbitMqValidate = rabbitmq.NewRabbitMQSimple("seckill")
+	defer rabbitMqValidate.Destory()
 
-	http.HandleFunc("/check", filter.Handle(webHandler))
+	filter := common.NewFilter()
+	filter.RegisterFilterHandler("/check", Auth)
+	filter.RegisterFilterHandler("/checkRight", Auth)
+
+	//http.HandleFunc("/check", filter.Handle(webHandler))
+	http.HandleFunc("/check", filter.Handle(check))
+
 	http.ListenAndServe("localhost:8083", nil)
 }
